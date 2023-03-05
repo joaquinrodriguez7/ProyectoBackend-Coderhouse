@@ -94,20 +94,18 @@ export default class ProductManager{
         try {
             const data = await fs.promises.readFile(this.path, "utf-8");
             const result = JSON.parse(data);
-            this.products = result
-            
+            this.products = result     
             const productIndex = this.products.findIndex((product) => product.id === id);
+            
             if (productIndex === -1) {
                 console.error("Product not found");
                 return;
             }
-
             const updatedProduct = { ...this.products[productIndex], ...changes };
             this.products[productIndex] = updatedProduct;
-            this.products.push(updatedProduct)
             await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, "\t"));
-
             console.log("Update product");
+            
         } catch (error) {
             console.log(error);
         }

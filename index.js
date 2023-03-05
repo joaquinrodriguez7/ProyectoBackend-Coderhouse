@@ -10,6 +10,10 @@ const operations = async () => {
          console.log(product2)
          let product3 = await manager.addProduct("A3", "Bananas", "500gr", 200, "banana.jpg", 55)
          console.log(product3)
+         let product4 = await manager.addProduct("A4", "Cerezas", "500gr", 400, "cerezas.jpg", 72)
+         console.log(product4)
+         let product5 = await manager.addProduct("A5", "Kiwi", "500gr", 355, "kiwi.jpg", 23)
+         console.log(product5)
           let productoId= await manager.getProductById(2)
           console.log(productoId);
          let productAct = await manager.updateProduct(2, {title:"frutillas", price:"300"});

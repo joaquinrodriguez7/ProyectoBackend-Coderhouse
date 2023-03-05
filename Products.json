@@ -18,12 +18,21 @@
 		"id": 2
 	},
 	{
-		"code": "A2",
-		"title": "frutillas",
+		"code": "A4",
+		"title": "Cerezas",
 		"description": "500gr",
-		"price": "300",
-		"thumbnail": "manzana.jpg",
-		"stock": 25,
-		"id": 2
+		"price": 400,
+		"thumbnail": "cerezas.jpg",
+		"stock": 72,
+		"id": 4
+	},
+	{
+		"code": "A5",
+		"title": "Kiwi",
+		"description": "500gr",
+		"price": 355,
+		"thumbnail": "kiwi.jpg",
+		"stock": 23,
+		"id": 5
 	}
 ]
