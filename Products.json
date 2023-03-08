@@ -34,5 +34,14 @@
 		"thumbnail": "kiwi.jpg",
 		"stock": 23,
 		"id": 5
+	},
+	{
+		"code": "A3",
+		"title": "Bananas",
+		"description": "500gr",
+		"price": 200,
+		"thumbnail": "banana.jpg",
+		"stock": 55,
+		"id": 6
 	}
 ]
