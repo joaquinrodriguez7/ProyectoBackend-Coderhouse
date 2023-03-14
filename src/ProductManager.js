@@ -2,7 +2,7 @@ import fs from "fs";
 
 export default class ProductManager {
     constructor() {
-        this.path = "./Products.json";
+        this.path = "./src/public/files/Productos.json";
     }
 
     getProducts = async () => {
@@ -16,34 +16,37 @@ export default class ProductManager {
         }
     }
 
-    addProduct = async (code, title, description, price, thumbnail, stock) => {
+    addProduct = async (product) => {
         try {
             let products = await this.getProducts();
 
-            if (!code || !title || !description || !price || !thumbnail || !stock) {
+            if (!product.code || !product.title || !product.description || !product.price || !product.thumbnail || !product.stock || !product.category) {
                 console.log("All the fields must be completed")
                 return;
             }
 
-            let productRepeated = products.find((element) => element.code === code);
+            let productRepeated = products.find((element) => element.code === product.code);
             if (productRepeated) {
                 return "The product is already exist";
             }
-            const product = {
-                code: code,
-                title: title,
-                description: description,
-                price: price,
-                thumbnail: thumbnail,
-                stock: stock,
+            const productToAdded = {
+                code: product.code,
+                title: product.title,
+                description: product.description,
+                price: product.price,
+                thumbnail: product.thumbnail,
+                stock: product.stock,
+                category: product.category,
             }
             if (products.length === 0) {
                 product.id = 1
             } else {
                 product.id = products[products.length - 1].id + 1
             }
-
-            products.push(product);
+            if(product.stock > 0){
+                product.status = true
+            }
+            products.push(productToAdded);
             await fs.promises.writeFile(this.path, JSON.stringify(products, null, "\t"));
             return products;
         } catch (error) {

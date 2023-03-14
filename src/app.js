@@ -1,37 +1,14 @@
-import ProductManager from './ProductManager.js';
 import express from "express";
+import productsRouter from "./routes/products.router.js"
+import cartRouter from "./routes/cart.router.js"
 
-const manager = new ProductManager();
 const app = express();
 
-app.get("/products", async (req, res) => {
-    try {
-        const consulta = await manager.getProducts();
-        let limit = Number.parseInt(req.query.limit)
-        if (limit) {
-            const resultado = consulta.slice(0, limit);
-            res.send(resultado);
-        } else {
-            res.send(consulta);
-        }
-    } catch (error) {
-        console.log(error)
-    }
-});
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/products", productsRouter)
+app.use("/api/cart", cartRouter)
 
-app.get("/products/:pid", async (req, res) => {
-    try {
-        let id = req.params.pid
-        const consultaId = await manager.getProductById(Number.parseInt(id));
-        if (!consultaId) {
-            return res.send({ error: "El producto con ese id no se encuentra en el archivo" });
-        } else {
-            res.send(consultaId);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-});
 
 app.listen(8080, () => {
     try {
@@ -40,3 +17,4 @@ app.listen(8080, () => {
         console.log(error);
     }
 });
+

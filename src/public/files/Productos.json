@@ -1,0 +1,20 @@
+[
+	{
+		"code": "A7",
+		"title": "lechuga",
+		"description": "1000gr",
+		"price": "375",
+		"thumbnail": "lechuga.jpg",
+		"stock": 42,
+		"category": "verdura"
+	},
+	{
+		"code": "8",
+		"title": "tomate",
+		"description": "1000gr",
+		"price": "550",
+		"thumbnail": "tomate.jpg",
+		"stock": 33,
+		"category": "verdura"
+	}
+]
