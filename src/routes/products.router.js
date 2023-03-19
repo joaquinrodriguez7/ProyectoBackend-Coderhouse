@@ -4,8 +4,8 @@ import ProductManager from "../ProductManager.js";
 const router = Router();
 const manager = new ProductManager()
 
-router.get("/", (req, res) => {
-    const consult = manager.getProducts();
+router.get("/", async (req, res) => {
+    const consult = await manager.getProducts();
     let limit = Number(req.query.limit)
     if (limit) {
         const resultado = consult.slice(0, limit);
@@ -16,9 +16,9 @@ router.get("/", (req, res) => {
         .send(consult);
 });
 
-router.get("/:pid", (req, res) => {
+router.get("/:pid", async (req, res) => {
     let id = req.params.pid
-    const consultId = manager.getProductById(Number.parseInt(id));
+    const consultId = await manager.getProductById(Number.parseInt(id));
     if (!consultId) {
         return res
             .send({ error: "The product with that ID was not found" });
@@ -28,9 +28,9 @@ router.get("/:pid", (req, res) => {
     }
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
     const product = req.body;
-    let result = manager.addProduct(product);
+    let result = await manager.addProduct(product);
 
     if (result === undefined || result === null) {
         return res
@@ -41,21 +41,23 @@ router.post("/", (req, res) => {
     }
 })
 
-router.put("/:pid", (req, res) => {
+router.put("/:pid", async (req, res) => {
     const product = req.body;
     const id = req.params.pid;
-    let result = manager.updateProduct(Number(id), product);
-    if (result === null || result === undefined) {
+    let result = await manager.updateProduct(Number(id), product);
+    if (typeof (result) === "string") {
         return res
-            .send({ error: "The ID entered does not exist" });
+            .status(404)
+            .send({ status: "error", message: "The ID entered does not exist" });
     }
     res
-        .send({ mensaje: result });
+        .status(201)
+        .send({ status: "success", mensaje: "Product updated" });
 })
 
-router.delete("/:pid", (req, res) => {
+router.delete("/:pid", async (req, res) => {
     const id = req.params.pid;
-    let result = manager.deleteProducts(Number(id));
+    let result = await manager.deleteProducts(Number(id));
     res
         .send({ mensaje: result })
 });

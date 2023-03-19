@@ -47,33 +47,56 @@ export default class CartManager {
         }
     }
 
-    addProducttoCart = async (cId, idProd) => {
+    addProducttoCart = async (cId, pId, qty) => {
         try {
-            const products = await manager.getProducts();
-            let cart = await this.getCart();
-            const productExistsIncart = cart.find((cartprod) => cartprod.id === cId)
+            if (isNaN(cId) || cId <= 0) {
+                return `The id ${cId} of this cart has a invalid value or does not exist`
+            }
+            if (isNaN(pId) || pId <= 0) {
+                return `The id ${pId} of this product has a invalid value or does not exist`
+            }
 
-            if (!productExistsIncart) {
-                return "This cart does not exist";
+            const carts = await this.getCart();
+            const cartIdFounded = carts.findIndex((cart) => cart.id === Number(cId));
+
+            const products = await productmanager.getProducts();
+            const productIdFounded = products.findIndex((prod) => prod.id === Number(pId));
+            if (cartIdFounded === -1) {
+                return `The cart with the id ${cId} does not exist in the file`
+            }
+
+            if (productIdFounded === -1) {
+                return `The product with the id ${pId} does not exist in the file`
+            }
+            let productToAdd = {}
+            if (isNaN(qty) || qty <= 0) {
+                productToAdd = {
+                    id: Number(pId),
+                    qty: 1
+                };
             } else {
-                let indexValue = products.find((event) => event.id === idProd);
-                const resultado = productExistsIncart.products.find((prod) => prod.id === idProd)
-                if (!resultado) {
-                    let qty = 0
-                    const productAdding = {
-                        id: indexValue.id, quantity: qty
+                productToAdd = {
+                    id: Number(pId),
+                    qty: Number(qty)
+                };
+            }
+
+            const cartIdFound = carts.findIndex((cart) => cart.id === cId);
+            const productIdFound = carts[cartIdFound].products.findIndex((prod) => prod.id === pId)
+            if (cartIdFound !== -1) {
+                if (productIdFound !== -1) {
+                    if (isNaN(qty) || qty <= 0) {
+                        carts[cartIdFound].products[productIdFound].qty++;
+                    } else {
+                        carts[cartIdFound].products[productIdFound].qty += Number(qty)
                     }
-                    productExistsIncart.products.push(productAdding);
-                    await fs.promises.writeFile(this.path, JSON.stringify(cart, null, "\t"));
-                    return "Product added to cart";
                 } else {
-                    console.log(resultado.quantity)
-                    const prodQuantitymodified = { id: resultado.id, "quantity": resultado.quantity + 1 }
-                    console.log(productExistsIncart.products.length)
-                    productExistsIncart.products[productExistsIncart.products.length - 1] = prodQuantitymodified
-                    await fs.promises.writeFile(this.path, JSON.stringify(cart, null, "\t"));
-                    return "Quantity modified";
+                    carts[cartIdFound].products.push(productToAdd);
                 }
+                await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
+                return carts;
+            } else {
+                return `The cart with this ID does not exist`;
             }
         } catch (error) {
             console.log(error)

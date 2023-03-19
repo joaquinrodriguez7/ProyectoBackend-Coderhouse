@@ -37,13 +37,15 @@ export default class ProductManager {
                 thumbnail: product.thumbnail,
                 stock: product.stock,
                 category: product.category,
+                id: product.id,
+                status: product.status,
             }
             if (products.length === 0) {
                 product.id = 1
             } else {
                 product.id = products[products.length - 1].id + 1
             }
-            if(product.stock > 0){
+            if (product.stock > 0) {
                 product.status = true
             }
             products.push(productToAdded);

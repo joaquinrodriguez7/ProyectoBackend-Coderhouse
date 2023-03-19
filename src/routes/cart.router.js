@@ -5,8 +5,8 @@ const router = Router();
 const cartmanager = new CartManager()
 
 
-router.post("/", (req, res) => {
-    const cart = cartmanager.createCart();
+router.post("/", async (req, res) => {
+    const cart = await cartmanager.createCart();
 
     if (!cart) {
         return res
@@ -18,9 +18,9 @@ router.post("/", (req, res) => {
         .send({ mensaje: cart });
 })
 
-router.get("/:cid", (req, res) => {
+router.get("/:cid", async (req, res) => {
     const id = req.params.cid
-    const cart = cartmanager.getCartById(Number(id));
+    const cart = await cartmanager.getCartById(Number(id));
 
     if (!cart) {
         return res
@@ -32,19 +32,20 @@ router.get("/:cid", (req, res) => {
         .send(cart);
 })
 
-router.post("/:cid/product/:pid", (req, res) => {
+router.post("/:cid/product/:pid", async (req, res) => {
     const cid = req.params.cid
     const pid = req.params.pid
-    const cart = cartmanager.addProducttoCart(Number(cid), Number(pid));
+    const qty = req.body.qty
+    const cart = await cartmanager.addProducttoCart(cid, pid, qty);
 
-    if (!cart) {
+    if (typeof (cart) === "string") {
         return res
             .status(400)
-            .send({ mensaje: cart })
+            .send({ status: "error", message: cart });
     }
-    res
-        .status(600)
-        .send(cart);
+    return res
+        .status(201)
+        .send({ status: "success", message: "Product successfully added" });
 })
 
 
