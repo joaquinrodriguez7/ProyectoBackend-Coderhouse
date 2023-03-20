@@ -32,21 +32,29 @@ router.get("/:cid", async (req, res) => {
         .send(cart);
 })
 
-router.post("/:cid/product/:pid", async (req, res) => {
+router.post('/:cid/product/:pid', async (req, res) => {
     const cid = req.params.cid
     const pid = req.params.pid
-    const qty = req.body.qty
-    const cart = await cartmanager.addProducttoCart(cid, pid, qty);
+    const quantity = req.body.quantity
 
-    if (typeof (cart) === "string") {
+    if (!quantity) {
         return res
             .status(400)
-            .send({ status: "error", message: cart });
+            .send({ status: 'error', error: 'invalid product format' });
     }
+
+    const result = await cartmanager.addProductToCart(cid, pid, quantity);
+
+    if (!result) {
+        return res
+            .status(404)
+            .send({ status: 'error', error: 'cart not found' });
+    }
+
     return res
-        .status(201)
-        .send({ status: "success", message: "Product successfully added" });
-})
+        .status(200)
+        .send({ status: 'success', data: result });
+});
 
 
 export default router;
