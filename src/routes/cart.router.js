@@ -33,9 +33,12 @@ router.get("/:cid", async (req, res) => {
 })
 
 router.post('/:cid/product/:pid', async (req, res) => {
-    const cid = req.params.cid
-    const pid = req.params.pid
-    const quantity = req.body.quantity
+    const objCart = {
+        cid: req.params.cid,
+        pid: req.params.pid,
+        quantity: req.body.quantity || 1,
+    }
+    
 
     if (!quantity) {
         return res
@@ -43,7 +46,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
             .send({ status: 'error', error: 'invalid product format' });
     }
 
-    const result = await cartmanager.addProductToCart(cid, pid, quantity);
+    const result = await cartmanager.addProductToCart(objCart);
 
     if (!result) {
         return res
